@@ -1,14 +1,14 @@
 
 library IEEE;
-library UNISIM;
+
 library work;
   use IEEE.numeric_std.all;
   use IEEE.std_logic_1164.all;
-  use UNISIM.VComponents.all;
-  use ieee.std_logic_unsigned.all;
+
+
   use work.xgen_axistream_32.all;
   
-  use work.roling_register_p.all;
+
 
 entity Feature_extraction is
   port (
@@ -105,7 +105,7 @@ begin
         when find_rising_edge => 
           if isReceivingData( data_in) and ready_to_send(data_out) then      
             read_data( data_in, data_in_buffer);
-            SampleNr := SampleNr + 1;
+            SampleNr := std_logic_vector(unsigned(SampleNr) + 1);
             MaxSampleValue := maximum1( data_in_buffer , MaxSampleValue);
             if data_in_buffer > r_threshold then 
               rising_edge_sampleNr := SampleNr;
@@ -118,7 +118,7 @@ begin
         when find_falling_edge => 
           if isReceivingData( data_in) and ready_to_send(data_out) then      
             read_data( data_in, data_in_buffer);
-            SampleNr := SampleNr + 1;
+            SampleNr := std_logic_vector(unsigned(SampleNr) + 1);
             MaxSampleValue := maximum1( data_in_buffer , MaxSampleValue);
             if data_in_buffer < f_threshold then 
               falling_edge_sampleNr := SampleNr;
@@ -129,19 +129,13 @@ begin
             end if;
           end if;
         when send_falling_edge => 
-          if isReceivingData( data_in) then 
-            read_data( data_in, data_in_buffer);
-          end if;
           if ready_to_send(data_out) then 
             send_data( data_out , falling_edge_sampleNr);
             i_state <= send_ToT;
           end if;
         when send_ToT => 
-          if isReceivingData( data_in) then 
-            read_data( data_in, data_in_buffer);
-          end if;
           if ready_to_send(data_out) then 
-            send_data( data_out , falling_edge_sampleNr-rising_edge_sampleNr);
+            send_data( data_out , std_logic_vector(unsigned(falling_edge_sampleNr)-unsigned(rising_edge_sampleNr)) );
             i_state <= send_tail;
           end if;
         when send_tail  => 
