@@ -16,7 +16,7 @@ entity memory is
       memDepth  : integer := 8
     );
     port (
-        clk : std_logic;
+        clk : in std_logic;
         write_enable   : in  std_logic;
         Write_address  : in  std_logic_vector(memDepth  - 1 downto 0);
         Write_Data     : in  std_logic_vector(dataWidth - 1 downto 0);
