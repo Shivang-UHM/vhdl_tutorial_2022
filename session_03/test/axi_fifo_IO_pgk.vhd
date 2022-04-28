@@ -16,6 +16,7 @@ package axi_fifo_IO_pgk is
 
 type axi_fifo_writer_rec is record
         clk : std_logic;  
+    rst : std_logic;  
     data_in_valid : std_logic;  
     data_in_ready : std_logic;  
     data_in_data : std_logic_vector ( 15 downto 0 );  
@@ -29,6 +30,7 @@ end record;
 
 type axi_fifo_reader_rec is record
         clk : std_logic;  
+    rst : std_logic;  
     data_in_valid : std_logic;  
     data_in_data : std_logic_vector ( 15 downto 0 );  
     data_out_ready : std_logic;  
