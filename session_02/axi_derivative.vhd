@@ -11,7 +11,8 @@ use work.xgen_axistream_32.all;
 
 entity axi_derivative is
     port (
-        clk : std_logic;
+        clk : in std_logic;
+        rst : in std_logic;
         --- Data In
         data_in_valid : in  std_logic;
         data_in_ready : out std_logic;

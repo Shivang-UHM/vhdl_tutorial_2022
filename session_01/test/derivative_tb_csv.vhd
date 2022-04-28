@@ -24,7 +24,7 @@ end entity;
 
 architecture Behavioral of derivative_reader_et is 
 
-  constant  NUM_COL    : integer := 3;
+  constant  NUM_COL    : integer := 4;
   signal    csv_r_data : c_integer_array(NUM_COL -1 downto 0)  := (others=>0)  ;
 begin
 
@@ -40,8 +40,9 @@ begin
     );
 
   csv_from_integer(csv_r_data(0), data.clk);
-  csv_from_integer(csv_r_data(1), data.r_offset);
-  csv_from_integer(csv_r_data(2), data.data_in);
+  csv_from_integer(csv_r_data(1), data.rst);
+  csv_from_integer(csv_r_data(2), data.r_offset);
+  csv_from_integer(csv_r_data(3), data.data_in);
 
 
 end Behavioral;
@@ -69,14 +70,14 @@ entity derivative_writer_et  is
 end entity;
 
 architecture Behavioral of derivative_writer_et is 
-  constant  NUM_COL : integer := 4;
+  constant  NUM_COL : integer := 5;
   signal data_int   : c_integer_array(NUM_COL - 1 downto 0)  := (others=>0);
 begin
 
     csv_w : entity  work.csv_write_file 
         generic map (
             FileName => FileName,
-            HeaderLines=> "clk; r_offset; data_in; data_out",
+            HeaderLines=> "clk; rst; r_offset; data_in; data_out",
             NUM_COL =>   NUM_COL 
         ) port map(
             clk => clk, 
@@ -85,9 +86,10 @@ begin
 
 
   csv_to_integer(data.clk, data_int(0) );
-  csv_to_integer(data.r_offset, data_int(1) );
-  csv_to_integer(data.data_in, data_int(2) );
-  csv_to_integer(data.data_out, data_int(3) );
+  csv_to_integer(data.rst, data_int(1) );
+  csv_to_integer(data.r_offset, data_int(2) );
+  csv_to_integer(data.data_in, data_int(3) );
+  csv_to_integer(data.data_out, data_int(4) );
 
 
 end Behavioral;
@@ -131,6 +133,7 @@ begin
   
 
   data_out.clk <=clk;
+  data_out.rst <= data_in.rst;
   data_out.r_offset <= data_in.r_offset;
   data_out.data_in <= data_in.data_in;
 
@@ -138,6 +141,7 @@ begin
 DUT :  entity work.derivative  port map(
 
   clk => clk,
+  rst => data_out.rst,
   r_offset => data_out.r_offset,
   data_in => data_out.data_in,
   data_out => data_out.data_out

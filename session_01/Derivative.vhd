@@ -13,9 +13,10 @@ use ieee.std_logic_unsigned.all;
 entity Derivative is
     port (
         clk : in std_logic;
+        rst : in std_logic;
         r_offset  : in std_logic_vector(15 downto 0) := (others => '0');
-        data_in : std_logic_vector(15 downto 0);
-        data_out : out std_logic_vector(15 downto 0)
+        data_in   : in std_logic_vector(15 downto 0);
+        data_out  : out std_logic_vector(15 downto 0)
     );
 end entity Derivative;
 

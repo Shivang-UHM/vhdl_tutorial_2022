@@ -1,4 +1,4 @@
--- <header>Header; Nr_of_streams; recording TimeStamp; Operation; Number of packets; packateNr; Sending TimeStamp; data_in_valid; data_in_ready; data_in_data; data_out_valid; data_out_ready; data_out_data; Tail</header>
+-- <header>Header; Nr_of_streams; recording TimeStamp; Operation; Number of packets; packateNr; Sending TimeStamp; rst; data_in_valid; data_in_ready; data_in_data; data_out_valid; data_out_ready; data_out_data; Tail</header>
 
 
 
@@ -48,17 +48,17 @@ architecture rtl of axi_derivative_eth is
   signal  i_TxDataReadys   :  sl := '0';
 
   constant FIFO_DEPTH : integer := 10;
-  constant COLNum : integer := 3;
+  constant COLNum : integer := 4;
   signal i_data :  Word32Array(COLNum -1 downto 0) := (others => (others => '0'));
   signal i_controls_out    : Imp_test_bench_reader_Control_t  := Imp_test_bench_reader_Control_t_null;
   signal i_valid      : sl := '0';
    
-  constant COLNum_out : integer := 6;
+  constant COLNum_out : integer := 7;
   signal i_data_out :  Word32Array(COLNum_out -1 downto 0) := (others => (others => '0'));
    
 
-  signal data_in  : axi_derivative_reader_rec := axi_derivative_reader_rec_null;
-  signal data_out : axi_derivative_writer_rec := axi_derivative_writer_rec_null;
+  signal data_in  : axi_derivative_reader_rec;
+  signal data_out : axi_derivative_writer_rec;
   
 begin
   
@@ -117,6 +117,7 @@ throttel : entity work.axiStreamThrottle
 -- <DUT>
     DUT :  entity work.axi_derivative port map(
   clk => globals.clk,
+  rst => data_out.rst,
   data_in_valid => data_out.data_in_valid,
   data_in_ready => data_out.data_in_ready,
   data_in_data => data_out.data_in_data,
@@ -129,25 +130,28 @@ throttel : entity work.axiStreamThrottle
 
 --  <data_out_converter>
 
-sl_to_slv(data_out.data_in_valid, i_data_out(0) );
-sl_to_slv(data_out.data_in_ready, i_data_out(1) );
-slv_to_slv(data_out.data_in_data, i_data_out(2) );
-sl_to_slv(data_out.data_out_valid, i_data_out(3) );
-sl_to_slv(data_out.data_out_ready, i_data_out(4) );
-slv_to_slv(data_out.data_out_data, i_data_out(5) );
+sl_to_slv(data_out.rst, i_data_out(0) );
+sl_to_slv(data_out.data_in_valid, i_data_out(1) );
+sl_to_slv(data_out.data_in_ready, i_data_out(2) );
+slv_to_slv(data_out.data_in_data, i_data_out(3) );
+sl_to_slv(data_out.data_out_valid, i_data_out(4) );
+sl_to_slv(data_out.data_out_ready, i_data_out(5) );
+slv_to_slv(data_out.data_out_data, i_data_out(6) );
 
 --  </data_out_converter>
 
 -- <data_in_converter> 
 
-slv_to_sl(i_data(0), data_in.data_in_valid);
-slv_to_slv(i_data(1), data_in.data_in_data);
-slv_to_sl(i_data(2), data_in.data_out_ready);
+slv_to_sl(i_data(0), data_in.rst);
+slv_to_sl(i_data(1), data_in.data_in_valid);
+slv_to_slv(i_data(2), data_in.data_in_data);
+slv_to_sl(i_data(3), data_in.data_out_ready);
 
 --</data_in_converter>
 
 -- <connect_input_output>
 
+data_out.rst <= data_in.rst;
 data_out.data_in_valid <= data_in.data_in_valid;
 data_out.data_in_data <= data_in.data_in_data;
 data_out.data_out_ready <= data_in.data_out_ready;
@@ -240,6 +244,8 @@ entity axi_derivative_top is
    --
    -- TRIGGER SIGNALS
     TARGET_TB                : in tb_vec_type;
+    EX_TRIGGER_MB            : out std_logic := '0';
+    EX_TRIGGER_SCROD         : out std_logic := '0';
    
    TDC_DONE                 : in STD_LOGIC_VECTOR(9 downto 0) := (others => '0')  ; -- move to readout signals
    TDC_MON_TIMING           : in STD_LOGIC_VECTOR(9 downto 0) := (others => '0')  ;  -- add the ref to the programming of the TX chip
@@ -250,13 +256,13 @@ entity axi_derivative_top is
     SSTIN_P :  out STD_LOGIC_VECTOR (9 downto 0) := (others => '0')  ;
    
     --- MPPC ADC
-    SCL_MON                  : out STD_LOGIC := '0';
+    SCL_MON                  : out STD_LOGIC  := '0';
     SDA_MON                  : inout STD_LOGIC := '0';
     
-    TDC_CS_DAC               : out std_logic_vector(9 downto 0):= (others => '0') ; 
+    TDC_CS_DAC               : out std_logic_vector(9 downto 0) :=  (others => '0'); 
 
-   TDC_AMUX_S               : out std_logic_vector(3 downto 0):= (others => '0') ; -- what the difference between these two?
-   TOP_AMUX_S               : out std_logic_vector(3 downto 0):= (others => '0')  -- TODO: check schematic
+   TDC_AMUX_S               : out std_logic_vector(3 downto 0) :=  (others => '0'); 
+   TOP_AMUX_S               : out std_logic_vector(3 downto 0) :=  (others => '0')
   );
 end entity;
 
@@ -287,9 +293,10 @@ architecture rtl of axi_derivative_top is
   signal ethCoreMacAddr : MacAddrType := MAC_ADDR_DEFAULT_C;
      
   signal userRst     : sl;
-  signal ethCoreIpAddr  : IpAddrType  := IP_ADDR_DEFAULT_C;
+  
+  constant ethCoreIpAddr  : IpAddrType  := (3 => x"C0", 2 => x"A8", 1 => x"01", 0 => x"14");
   constant ethCoreIpAddr1 : IpAddrType  := (3 => x"C0", 2 => x"A8", 1 => x"01", 0 => x"21");
-  constant udpPort        :  slv(15 downto 0):=  x"07D1" ;  -- 0x7d1
+  constant udpPort        :  slv(15 downto 0):=  x"07D1" ;  -- 2001
 
      
   signal will_clk: std_logic := '0';
@@ -387,7 +394,7 @@ begin
       -- Core settings in 
       macAddr         => ethCoreMacAddr,
       ipAddrs         => (0 => ethCoreIpAddr, 1 => ethCoreIpAddr1),
-      udpPorts        => (0 => x"07D0",       1 => udpPort), --x7D0 = 2000,
+      udpPorts        => (0 => udpPort,       1 => udpPort),
       -- User clock inputs
       userClk         => ethClk125,
       userRstIn       => '0',
@@ -418,8 +425,8 @@ begin
     RxDataReady  => userRxDataReadys(0),
 
 
-    globals => globals,
-    TX_DAC_control_out => TX_DAC_control_out
+    globals => globals
+    
   );
   
  

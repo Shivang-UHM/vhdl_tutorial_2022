@@ -15,6 +15,7 @@ package derivative_IO_pgk is
 
 type derivative_writer_rec is record
         clk : std_logic;  
+    rst : std_logic;  
     r_offset : std_logic_vector ( 15 downto 0 );  
     data_in : std_logic_vector ( 15 downto 0 );  
     data_out : std_logic_vector ( 15 downto 0 );  
@@ -25,6 +26,7 @@ end record;
 
 type derivative_reader_rec is record
         clk : std_logic;  
+    rst : std_logic;  
     r_offset : std_logic_vector ( 15 downto 0 );  
     data_in : std_logic_vector ( 15 downto 0 );  
 
