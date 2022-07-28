@@ -62,16 +62,12 @@ PACKAGE target_c_pack IS
 
     TYPE sampling_t IS RECORD
         SSTIN : STD_LOGIC;    
-        SIN : STD_LOGIC;      
-        SCLK : STD_LOGIC;     
         WR_Coloumn_Select : STD_LOGIC_VECTOR(5 DOWNTO 0); 
         WR_Row_Select : STD_LOGIC_VECTOR(1 DOWNTO 0);     
     END RECORD;
 
     CONSTANT sampling_t_null : sampling_t := (
         SSTIN => '0',
-        SIN => '0',
-        SCLK => '0',
         WR_Coloumn_Select =>  (others =>'0'),
         WR_Row_Select =>  (others =>'0')
     );

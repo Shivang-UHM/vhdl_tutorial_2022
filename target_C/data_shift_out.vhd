@@ -149,6 +149,7 @@ BEGIN
                             IF (SScnt < 31) THEN
                                 hsout_stm <= LOW_SET0;
                             ELSE
+                                Send_end_Of_Stream(tx,true);
                                 hsout_stm <= IDLE;
                             END IF;
                         end if;
