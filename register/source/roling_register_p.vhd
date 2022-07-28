@@ -41,7 +41,9 @@ package roling_register_p is
   function reg_addr_ctr(header : STD_LOGIC_VECTOR; asic   : STD_LOGIC_VECTOR; channel: STD_LOGIC_VECTOR;  Lower_higher:STD_LOGIC) return reg_addr;
   function reg_addr_to_slv(data_in : reg_addr) return STD_LOGIC_VECTOR;
   function slv_to_reg_addr(dataIn:STD_LOGIC_VECTOR) return reg_addr;
+  procedure read_data(self : in registerT;  value :out  STD_LOGIC_VECTOR ; addr :in integer);
   procedure read_data_s(self : in registerT; signal value :out  STD_LOGIC_VECTOR ; addr :in integer);
+  procedure read_data_s(self : in registerT; signal value :out  STD_LOGIC ; addr :in integer);
 
 
   procedure timeWindow(signal OutData : inout std_logic; timeCounter : STD_LOGIC_VECTOR; StartTime : STD_LOGIC_VECTOR; EndTime : STD_LOGIC_VECTOR);
@@ -244,7 +246,26 @@ function reg_addr_to_slv(data_in : reg_addr) return STD_LOGIC_VECTOR is
     return ret;  
   end function;
   
-  
+  procedure read_data(self : in registerT;  value :out  STD_LOGIC_VECTOR ; addr :in integer) is 
+
+  variable m1 : integer := 0;
+  variable m2 : integer := 0;
+  variable m : integer := 0;
+begin
+  m1 := value'length;
+  m2 := self.value'length;
+
+  if (m1 < m2) then 
+    m := m1;
+  else 
+    m := m2;
+  end if;
+
+  if to_integer(signed(self.address)) = addr then
+    value(m - 1 downto 0) := self.value(  m - 1 downto 0);
+  end if; 
+  end procedure;
+
   procedure read_data_s(self : in registerT;signal value :out  std_logic_vector ; addr :in integer) is 
     variable m1 : integer := 0;
     variable m2 : integer := 0;
@@ -263,6 +284,18 @@ function reg_addr_to_slv(data_in : reg_addr) return STD_LOGIC_VECTOR is
       value(m - 1 downto 0) <= self.value(  m - 1 downto 0);
     end if; 
   end procedure;
+
+  
+
+  procedure read_data_s(self : in registerT;signal value :out  std_logic ; addr :in integer) is 
+  variable r : std_logic_vector(15 downto 0) := (others => '0');
+  
+begin
+  if to_integer(signed(self.address)) = addr then
+    read_data(self, r, addr);
+    value <= r(0);
+  end if;
+end procedure;
 
   procedure timeWindow(signal OutData : inout std_logic; timeCounter : STD_LOGIC_VECTOR; StartTime : STD_LOGIC_VECTOR; EndTime : STD_LOGIC_VECTOR) is
 
