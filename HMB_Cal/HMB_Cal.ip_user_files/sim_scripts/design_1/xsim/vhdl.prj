@@ -1,0 +1,11 @@
+vhdl xil_defaultlib  \
+"../../../bd/design_1/ip/design_1_proc_sys_reset_0_0/sim/design_1_proc_sys_reset_0_0.vhd" \
+"../../../bd/design_1/ipshared/6a5c/hdl/AXI4lite_to_GPIO_v1_0_S00_AXI.vhd" \
+"../../../bd/design_1/ipshared/6a5c/hdl/AXI4lite_to_GPIO_v1_0.vhd" \
+"../../../bd/design_1/ip/design_1_AXI4lite_to_GPIO_0_0/sim/design_1_AXI4lite_to_GPIO_0_0.vhd" \
+"../../../bd/design_1/ipshared/4c9c/hdl/AXI4LITE_pac.vhd" \
+"../../../bd/design_1/ipshared/4c9c/hdl/my_axi4_lite_exporter_v1_0.vhd" \
+"../../../bd/design_1/ip/design_1_my_axi4_lite_exporter_0_0/sim/design_1_my_axi4_lite_exporter_0_0.vhd" \
+"../../../bd/design_1/sim/design_1.vhd" \
+
+nosort
