@@ -827,3 +827,228 @@ INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 
 Checksum: PlaceDB: 431235be ConstDB: 0 ShapeSum: 60da761f RouteDB: 0
 
 Phase 1 Build RT Design
+Phase 1 Build RT Design | Checksum: 12c2e5d76
+
+Time (s): cpu = 00:00:41 ; elapsed = 00:00:32 . Memory (MB): peak = 3210.766 ; gain = 0.000 ; free physical = 8570 ; free virtual = 39501
+Post Restoration Checksum: NetGraph: dfd048e8 NumContArr: 4c5e148e Constraints: 0 Timing: 0
+
+Phase 2 Router Initialization
+
+Phase 2.1 Create Timer
+Phase 2.1 Create Timer | Checksum: 12c2e5d76
+
+Time (s): cpu = 00:00:41 ; elapsed = 00:00:32 . Memory (MB): peak = 3210.766 ; gain = 0.000 ; free physical = 8569 ; free virtual = 39501
+
+Phase 2.2 Fix Topology Constraints
+Phase 2.2 Fix Topology Constraints | Checksum: 12c2e5d76
+
+Time (s): cpu = 00:00:41 ; elapsed = 00:00:32 . Memory (MB): peak = 3210.766 ; gain = 0.000 ; free physical = 8535 ; free virtual = 39466
+
+Phase 2.3 Pre Route Cleanup
+Phase 2.3 Pre Route Cleanup | Checksum: 12c2e5d76
+
+Time (s): cpu = 00:00:41 ; elapsed = 00:00:32 . Memory (MB): peak = 3210.766 ; gain = 0.000 ; free physical = 8535 ; free virtual = 39466
+ Number of Nodes with overlaps = 0
+
+Phase 2.4 Update Timing
+Phase 2.4 Update Timing | Checksum: 101708b1c
+
+Time (s): cpu = 00:00:43 ; elapsed = 00:00:34 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8518 ; free virtual = 39449
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=11.954 | TNS=0.000  | WHS=-0.151 | THS=-19.545|
+
+Phase 2 Router Initialization | Checksum: 164a52aa0
+
+Time (s): cpu = 00:00:44 ; elapsed = 00:00:34 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8520 ; free virtual = 39451
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0 %
+  Global Horizontal Routing Utilization  = 0 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 1861
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 1861
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+
+Phase 3 Initial Routing
+
+Phase 3.1 Global Routing
+Phase 3.1 Global Routing | Checksum: 164a52aa0
+
+Time (s): cpu = 00:00:45 ; elapsed = 00:00:34 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8518 ; free virtual = 39449
+Phase 3 Initial Routing | Checksum: 1e3ccb47b
+
+Time (s): cpu = 00:00:46 ; elapsed = 00:00:34 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8517 ; free virtual = 39449
+
+Phase 4 Rip-up And Reroute
+
+Phase 4.1 Global Iteration 0
+ Number of Nodes with overlaps = 90
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=10.168 | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 4.1 Global Iteration 0 | Checksum: 1836cc3fa
+
+Time (s): cpu = 00:00:48 ; elapsed = 00:00:35 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8516 ; free virtual = 39448
+
+Phase 4.2 Global Iteration 1
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=10.168 | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 4.2 Global Iteration 1 | Checksum: 100eb2fa4
+
+Time (s): cpu = 00:00:48 ; elapsed = 00:00:36 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8516 ; free virtual = 39448
+Phase 4 Rip-up And Reroute | Checksum: 100eb2fa4
+
+Time (s): cpu = 00:00:48 ; elapsed = 00:00:36 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8516 ; free virtual = 39448
+
+Phase 5 Delay and Skew Optimization
+
+Phase 5.1 Delay CleanUp
+
+Phase 5.1.1 Update Timing
+Phase 5.1.1 Update Timing | Checksum: f5d96daf
+
+Time (s): cpu = 00:00:49 ; elapsed = 00:00:36 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8516 ; free virtual = 39448
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=10.283 | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 5.1 Delay CleanUp | Checksum: f5d96daf
+
+Time (s): cpu = 00:00:49 ; elapsed = 00:00:36 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8516 ; free virtual = 39448
+
+Phase 5.2 Clock Skew Optimization
+Phase 5.2 Clock Skew Optimization | Checksum: f5d96daf
+
+Time (s): cpu = 00:00:49 ; elapsed = 00:00:36 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8516 ; free virtual = 39448
+Phase 5 Delay and Skew Optimization | Checksum: f5d96daf
+
+Time (s): cpu = 00:00:49 ; elapsed = 00:00:36 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8516 ; free virtual = 39448
+
+Phase 6 Post Hold Fix
+
+Phase 6.1 Hold Fix Iter
+
+Phase 6.1.1 Update Timing
+Phase 6.1.1 Update Timing | Checksum: f9c1b503
+
+Time (s): cpu = 00:00:49 ; elapsed = 00:00:36 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8516 ; free virtual = 39448
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=10.283 | TNS=0.000  | WHS=0.094  | THS=0.000  |
+
+Phase 6.1 Hold Fix Iter | Checksum: a7964026
+
+Time (s): cpu = 00:00:49 ; elapsed = 00:00:36 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8516 ; free virtual = 39448
+Phase 6 Post Hold Fix | Checksum: a7964026
+
+Time (s): cpu = 00:00:49 ; elapsed = 00:00:36 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8516 ; free virtual = 39448
+
+Phase 7 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0.216113 %
+  Global Horizontal Routing Utilization  = 0.303414 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Phase 7 Route finalize | Checksum: 15680615b
+
+Time (s): cpu = 00:00:50 ; elapsed = 00:00:36 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8516 ; free virtual = 39448
+
+Phase 8 Verifying routed nets
+
+ Verification completed successfully
+Phase 8 Verifying routed nets | Checksum: 15680615b
+
+Time (s): cpu = 00:00:50 ; elapsed = 00:00:36 . Memory (MB): peak = 3237.402 ; gain = 26.637 ; free physical = 8515 ; free virtual = 39447
+
+Phase 9 Depositing Routes
+Phase 9 Depositing Routes | Checksum: d7db3b1d
+
+Time (s): cpu = 00:00:50 ; elapsed = 00:00:36 . Memory (MB): peak = 3269.418 ; gain = 58.652 ; free physical = 8516 ; free virtual = 39447
+
+Phase 10 Post Router Timing
+INFO: [Route 35-57] Estimated Timing Summary | WNS=10.283 | TNS=0.000  | WHS=0.094  | THS=0.000  |
+
+INFO: [Route 35-327] The final timing numbers are based on the router estimated timing analysis. For a complete and accurate timing signoff, please run report_timing_summary.
+Phase 10 Post Router Timing | Checksum: d7db3b1d
+
+Time (s): cpu = 00:00:50 ; elapsed = 00:00:36 . Memory (MB): peak = 3269.418 ; gain = 58.652 ; free physical = 8516 ; free virtual = 39447
+INFO: [Route 35-16] Router Completed Successfully
+
+Time (s): cpu = 00:00:50 ; elapsed = 00:00:36 . Memory (MB): peak = 3269.418 ; gain = 58.652 ; free physical = 8552 ; free virtual = 39484
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Implementation
+97 Infos, 200 Warnings, 106 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:00:56 ; elapsed = 00:00:40 . Memory (MB): peak = 3269.418 ; gain = 58.652 ; free physical = 8552 ; free virtual = 39484
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing placer database...
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.29 . Memory (MB): peak = 3269.418 ; gain = 0.000 ; free physical = 8539 ; free virtual = 39476
+INFO: [Common 17-1381] The checkpoint '/home1/shivang/github/HMB_CalRDout/HMB_Cal/HMB_Cal.runs/impl_1/target_C_top_routed.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_drc -file target_C_top_drc_routed.rpt -pb target_C_top_drc_routed.pb -rpx target_C_top_drc_routed.rpx
+Command: report_drc -file target_C_top_drc_routed.rpt -pb target_C_top_drc_routed.pb -rpx target_C_top_drc_routed.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Coretcl 2-168] The results of DRC are in file /home1/shivang/github/HMB_CalRDout/HMB_Cal/HMB_Cal.runs/impl_1/target_C_top_drc_routed.rpt.
+report_drc completed successfully
+INFO: [runtcl-4] Executing : report_methodology -file target_C_top_methodology_drc_routed.rpt -pb target_C_top_methodology_drc_routed.pb -rpx target_C_top_methodology_drc_routed.rpx
+Command: report_methodology -file target_C_top_methodology_drc_routed.rpt -pb target_C_top_methodology_drc_routed.pb -rpx target_C_top_methodology_drc_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [DRC 23-133] Running Methodology with 8 threads
+INFO: [Coretcl 2-1520] The results of Report Methodology are in file /home1/shivang/github/HMB_CalRDout/HMB_Cal/HMB_Cal.runs/impl_1/target_C_top_methodology_drc_routed.rpt.
+report_methodology completed successfully
+INFO: [runtcl-4] Executing : report_power -file target_C_top_power_routed.rpt -pb target_C_top_power_summary_routed.pb -rpx target_C_top_power_routed.rpx
+Command: report_power -file target_C_top_power_routed.rpt -pb target_C_top_power_summary_routed.pb -rpx target_C_top_power_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+109 Infos, 200 Warnings, 106 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+INFO: [runtcl-4] Executing : report_route_status -file target_C_top_route_status.rpt -pb target_C_top_route_status.pb
+INFO: [runtcl-4] Executing : report_timing_summary -max_paths 10 -file target_C_top_timing_summary_routed.rpt -pb target_C_top_timing_summary_routed.pb -rpx target_C_top_timing_summary_routed.rpx -warn_on_violation 
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
+INFO: [runtcl-4] Executing : report_incremental_reuse -file target_C_top_incremental_reuse_routed.rpt
+INFO: [Vivado_Tcl 4-1062] Incremental flow is disabled. No incremental reuse Info to report.
+INFO: [runtcl-4] Executing : report_clock_utilization -file target_C_top_clock_utilization_routed.rpt
+INFO: [runtcl-4] Executing : report_bus_skew -warn_on_violation -file target_C_top_bus_skew_routed.rpt -pb target_C_top_bus_skew_routed.pb -rpx target_C_top_bus_skew_routed.rpx
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
+Command: write_bitstream -force target_C_top.bit
+Attempting to get a license for feature 'Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7z020'
+Running DRC as a precondition to command write_bitstream
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado 12-3199] DRC finished with 0 Errors
+INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
+INFO: [Designutils 20-2272] Running write_bitstream with 8 threads.
+Loading data files...
+Loading site data...
+Loading route data...
+Processing options...
+Creating bitmap...
+Creating bitstream...
+Writing bitstream ./target_C_top.bit...
+INFO: [Vivado 12-1842] Bitgen Completed Successfully.
+INFO: [Project 1-120] WebTalk data collection is mandatory when using a WebPACK part without a full Vivado license. To see the specific WebTalk data collected for your design, open the usage_statistics_webtalk.html or usage_statistics_webtalk.xml file in the implementation directory.
+INFO: [Common 17-186] '/home1/shivang/github/HMB_CalRDout/HMB_Cal/HMB_Cal.runs/impl_1/usage_statistics_webtalk.xml' has been successfully sent to Xilinx on Thu Jul 28 16:07:28 2022. For additional details about this file, please refer to the WebTalk help file at /opt/Xilinx/Vivado/2020.2/doc/webtalk_introduction.html.
+INFO: [Common 17-83] Releasing license: Implementation
+13 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+write_bitstream completed successfully
+write_bitstream: Time (s): cpu = 00:00:27 ; elapsed = 00:00:28 . Memory (MB): peak = 3585.711 ; gain = 211.902 ; free physical = 8498 ; free virtual = 39437
+INFO: [Common 17-206] Exiting Vivado at Thu Jul 28 16:07:28 2022...
