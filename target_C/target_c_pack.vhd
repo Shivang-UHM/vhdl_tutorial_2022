@@ -51,12 +51,14 @@ PACKAGE target_c_pack IS
         RDAD_clk : STD_LOGIC;
         RDAD_SIN : STD_LOGIC;
         RDAD_DIR : STD_LOGIC;
+        SAMPLESEL_ANY : STD_LOGIC;
     end record;
 
     constant sample_select_t_null : sample_select_t :=(
         RDAD_clk => '0',
         RDAD_SIN=> '0',
-        RDAD_DIR => '0'
+        RDAD_DIR => '0',
+        SAMPLESEL_ANY=> '0'
     );
 
 
@@ -86,7 +88,25 @@ PACKAGE target_c_pack IS
         serial_shift_out => serial_shift_out_m2s_null
     );
 
+    type Legacy_serial_m2s is record 
+        SIN  :  STD_LOGIC;
+        SCLK :  STD_LOGIC;
+        PCLK :  STD_LOGIC;
+    end record;
+    constant Legacy_serial_m2s_null : Legacy_serial_m2s := (
+        SIN => '0',
+        SCLK => '0',
+        PCLK => '0'
+    );
 
+
+    type Legacy_serial_s2m  is record 
+        SHOUT:   STD_LOGIC;
+    end record;
+
+    constant Legacy_serial_s2m_null : Legacy_serial_s2m := (
+        SHOUT=>'0'
+    );
 END PACKAGE;
 
 package body target_c_pack is 

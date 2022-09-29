@@ -27,7 +27,7 @@ end entity;
 
 architecture arch of fifo_manager_simple is
 
-    signal mem : slv_12_array(1000 downto 0) := (others => (others => '0'));
+    signal mem : slv_12_array(4000 downto 0) := (others => (others => '0'));
     signal counter : unsigned( 15 downto 0) := (others =>'0');
 begin
 
@@ -46,7 +46,7 @@ begin
                     end if;
                 end if;
 
-            data <=  mem( to_integer(unsigned( addr )) );
+            data <=  "0000" & mem( to_integer(unsigned( addr )) );
             push(rx, rx_s2m);
         end if;
     end process;

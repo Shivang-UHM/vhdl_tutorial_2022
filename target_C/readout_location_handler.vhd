@@ -6,7 +6,7 @@ USE work.xgen_axistream_32.ALL;
 USE work.handshake.all;
 use work.roling_register_p.all;
 use work.target_c_pack.all;
-
+use work.register_list.all;
 
 ENTITY readout_location_handler IS
     PORT (
@@ -24,11 +24,14 @@ ENTITY readout_location_handler IS
         tx_s2m : in axisStream_32_s2m := axisStream_32_s2m_null
     );
 END ENTITY;
+
+
 ARCHITECTURE arch OF readout_location_handler IS
 
 SIGNAL BitCnt : INTEGER := 8;
+signal RDAD_clk_period  : std_logic_vector(15 downto 0)  := ( others => '0');
+signal RDAD_clk_counter : unsigned(15 downto 0) := ( others => '0');
 
-signal ClockBus :  T_ClockBus;
 
 TYPE rdad_state_type IS (
     IDLE,  
@@ -40,10 +43,19 @@ TYPE rdad_state_type IS (
 );
 SIGNAL rdad_stm : rdad_state_type := IDLE;
 
-BEGIN
 
-    -- Digitilization Readout the Samples Storage Location
-    PROCESS (rst, clk)
+signal reg_sample_select_any : std_logic;
+BEGIN
+    PROCESS (rst, clk) is 
+    begin 
+        if rising_edge(clk) then
+            read_data_s(reg , reg_sample_select_any , reg_list.sample_select_any); 
+        end if;
+    end process;
+
+
+    
+    PROCESS (rst, clk) is
         VARIABLE rx : axisStream_32_slave := axisStream_32_slave_null;
         VARIABLE tx : axisStream_32_master := axisStream_32_master_null;
         VARIABLE rx_data : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
@@ -55,17 +67,20 @@ BEGIN
             sample_select_m2s.RDAD_DIR <= '0';
             BitCnt <= 8;
             RDAD_stm <= IDLE;
-
+            RDAD_clk_counter <= ( others => '0');
             rx_data := (OTHERS => '0');
 
         ELSIF rising_edge(clk) THEN
             pull (rx, rx_m2s);
             pull(tx, tx_s2m);
             sample_select_m2s.RDAD_DIR <= '0';
+            sample_select_m2s.RDAD_clk <= '0';
+            sample_select_m2s.SAMPLESEL_ANY<= reg_sample_select_any;
+            RDAD_clk_counter <= RDAD_clk_counter +1;
             CASE rdad_stm IS
                 WHEN IDLE =>
                     rx_data := (OTHERS => '0');
-                    sample_select_m2s.RDAD_clk <= '0';
+                    RDAD_clk_counter <= ( others => '0');
                     sample_select_m2s.RDAD_SIN <= '0';
                     BitCnt <= 0;
 
@@ -76,21 +91,28 @@ BEGIN
 
                 WHEN WDO_LOW_SET0 =>
                     rdad_stm <= WDO_LOW_SET1;
-                    sample_select_m2s.RDAD_clk <= '0';
+                    RDAD_clk_counter <= ( others => '0');
                     sample_select_m2s.RDAD_SIN <= rx_data(8 - BitCnt); --MSB First
                     sample_select_m2s.RDAD_DIR <= '1';
                 WHEN WDO_LOW_SET1 =>
-                    rdad_stm <= WDO_HIGH_SET1;
-                    sample_select_m2s.RDAD_clk <= '1';
+                    if RDAD_clk_counter >= unsigned( RDAD_clk_period) then 
+                        rdad_stm <= WDO_HIGH_SET1;
+                        RDAD_clk_counter <= ( others => '0');
+                    end if;
+                        --sample_select_m2s.RDAD_clk <= '1';
                     sample_select_m2s.RDAD_DIR <= '1';
 
                 WHEN WDO_HIGH_SET1 =>
                     sample_select_m2s.RDAD_DIR <= '1';
                     sample_select_m2s.RDAD_clk <= '1';
-                    rdad_stm <= WDO_HIGH_SET0;
+                    --rdad_stm <= WDO_HIGH_SET0;
+                    if RDAD_clk_counter >= unsigned( RDAD_clk_period) then 
+                        rdad_stm <= WDO_HIGH_SET0;
+                        RDAD_clk_counter <= ( others => '0');
+                end if;
                 WHEN WDO_HIGH_SET0 =>
 
-                    sample_select_m2s.RDAD_clk <= '0';
+                    
                     sample_select_m2s.RDAD_DIR <= '1';
                     BitCnt <= BitCnt + 1;
                     rdad_stm <= WDO_LOW_SET0;
@@ -114,4 +136,15 @@ BEGIN
             push(rx, rx_s2m);
         END IF;
     END PROCESS;
+
+    PROCESS (clk) is
+        BEGIN
+            if rising_edge(clk) then
+
+                
+                read_data_s(reg , RDAD_clk_period , reg_list.RDAD_clk_period); 
+
+            end if;
+        end process;
+    
 END ARCHITECTURE;

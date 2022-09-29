@@ -8,7 +8,8 @@ use work.roling_register_p.all;
 use work.register_list.all;
 use work.target_c_pack.all;
 
-
+Library UNISIM;
+use UNISIM.vcomponents.all;
 
 ENTITY Wilkinson_adc_handler IS
     PORT (
@@ -28,7 +29,7 @@ ENTITY Wilkinson_adc_handler IS
 END ENTITY;
 ARCHITECTURE arch OF Wilkinson_adc_handler IS
     
-
+    SIGNAL i_will_clock : STD_LOGIC := '0';
 
     signal DISCH_PERIOD : STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL WL_CNT_EN : STD_LOGIC := '0';
@@ -42,7 +43,10 @@ ARCHITECTURE arch OF Wilkinson_adc_handler IS
     );
     SIGNAL wlstate : wilkinson_type := IDLE;
     SIGNAL WL_CNT_INTL : UNSIGNED(15 DOWNTO 0) := x"0000";
-    SIGNAL ramp_count_max : std_logic_vector(15 downto 0) := x"0000";
+    SIGNAL ramp_count_max : std_logic_vector(15 downto 0) := x"0000";--x"7ff"
+    
+--    SIGNAL will_period : std_logic_vector(15 downto 0) := x"0000";
+--    SIGNAL will_period_counter : UNSIGNED(15 downto 0) := x"0000";
 BEGIN
 
     -- Wilkinson
@@ -55,14 +59,23 @@ BEGIN
         IF rst = '1' THEN
             will_out.ramp <= '0'; --Vdischarge
             will_out.GCC_reset   <= '1';
-
+        --    i_will_clock<= '1'; 
             rx := axisStream_32_slave_null;
             WL_CNT_EN <= '0';
             wlstate <= IDLE;
             tx := axisStream_32_master_null;
             rx_data := (OTHERS => '0');
+         --   will_period_counter<= (others => '0');
 
         ELSIF rising_edge(clk) THEN
+--            will_period_counter <= will_period_counter + 1;
+--            if  will_period_counter >= unsigned(will_period ) then 
+--                i_will_clock <= not i_will_clock;
+--                will_period_counter<= (others => '0');
+--            end if;
+            
+      --    will_out.CLK <= i_will_clock;
+      
             pull(rx, rx_m2s);
             pull(tx, tx_s2m);
             WL_CNT_INTL <= WL_CNT_INTL + 1;
@@ -113,7 +126,17 @@ BEGIN
             if rising_edge(clk) then
                 read_data_s(reg , DISCH_PERIOD , reg_list.DISCH_PERIOD); 
                 read_data_s(reg , ramp_count_max , reg_list.ramp_count_max); 
+     --           read_data_s(reg , will_period , reg_list.will_period); 
                 
             end if;
         end process;
+        
+    -- Wilkinson Clock => buffered the 125 MHz Clk from PS
+    BUFG_inst : BUFG
+                    port map (
+                        O => will_out.CLK,  -- 1-bit output: Clock output
+                        I => clk            -- 1-bit input: Clock input
+                );
+    
+
 END ARCHITECTURE;

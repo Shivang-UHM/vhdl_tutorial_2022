@@ -42,6 +42,7 @@ ARCHITECTURE arch OF data_shift_out IS
         RESPREADY,
         LOW_SET0,
         LOW_SET1,
+        HIGH_SETWait,
         HIGH_SET0,
         REQ_GRANT
     );
@@ -54,8 +55,8 @@ ARCHITECTURE arch OF data_shift_out IS
 
 
     
-
-    
+    constant c_ignore_start : INTEGER := 2;
+    constant c_magic_wait_time_for_increment : INTEGER := 10; -- your bet is as good as mine
 
 BEGIN
 
@@ -102,33 +103,42 @@ BEGIN
                 When RESPREADY =>
                     data_shift_out_m2s.reset <= '1';
                     data_shift_out_m2s.increment <= '1';
-                    hsout_stm <= LOW_SET0;
+                    
+                    SSBitCnt <= SSBitCnt + 1;
+                    if SSBitCnt = c_magic_wait_time_for_increment then 
+                        SSBitCnt <= 0;
+                        hsout_stm <= LOW_SET0;
+                    end if;
 
                 WHEN LOW_SET0 =>
                     hsout_stm <= LOW_SET1;
-                    data_shift_out_m2s.HSCLK <= '1'; --'0'
+                    data_shift_out_m2s.HSCLK <= '1'; 
                     
                     IF SSBitCnt = 0 THEN
                         data_shift_out_m2s.increment <= '1';
                     END IF;
 
                 WHEN LOW_SET1 =>
-                    hsout_stm <= HIGH_SET0;
+                
+                    hsout_stm <= HIGH_SETWait;
 
                     data_shift_out_m2s.HSCLK <= '1';
                     
+                when HIGH_SETWait => 
+                     hsout_stm <= HIGH_SET0;
+                     data_shift_out_m2s.HSCLK <= '1';
 
                 WHEN HIGH_SET0 =>
                     hsout_stm <= LOW_SET1;
                     
-                    IF SSBitCnt > 2 THEN
+                    IF SSBitCnt >= c_ignore_start THEN
                         FOR index IN data_out'RANGE LOOP
-                            data_out(index)(SSBitCnt - 3) <= data_shift_out_s2m.data(index);
+                            data_out(index)(SSBitCnt - c_ignore_start) <= data_shift_out_s2m.data(index);
                         END LOOP;
                     END IF;
                     
                     SSBitCnt <= SSBitCnt + 1;
-                    IF SSBitCnt = 14 THEN
+                    IF SSBitCnt = 11 + c_ignore_start THEN
                         hsout_stm <= REQ_GRANT;
                         SSBitCnt <= 0;
                     END IF;

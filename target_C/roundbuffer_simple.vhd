@@ -49,7 +49,7 @@ architecture arch of roundbuffer_simple is
 
     begin 
         if sst_counter_in >=  unsigned( '0' & sst_period_in(15 downto 1) ) then 
-        sampling_t_in.SSTIN <= '1';
+            sampling_t_in.SSTIN <= '1';
         end if;
         if sst_counter_in >=  unsigned( sst_period_in ) - 1 then 
             sst_counter_in<= (others => '0');
@@ -143,7 +143,9 @@ begin
             read_data_s(reg , wait_time , reg_list.wait_time); 
             read_data_s(reg , sst_period , reg_list.sst_period); 
             read_data_s(reg , sample_after_threshold , reg_list.sample_after_threshold); 
-            read_data_s(reg , i_sw_trigger_in , reg_list.SW_trigger); 
+            if is_register(reg, reg_list.SW_trigger) then 
+                i_sw_trigger_in <= reg.new_value;
+            end if;
             
         end if;
     end process;
