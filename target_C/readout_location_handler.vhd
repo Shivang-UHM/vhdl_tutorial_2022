@@ -1,9 +1,10 @@
+-- vsg_off
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 USE work.TARGETC_pkg.ALL;
 USE work.xgen_axistream_32.ALL;
-USE work.handshake.all;
+--USE work.handshake.all;
 use work.roling_register_p.all;
 use work.target_c_pack.all;
 use work.register_list.all;
@@ -50,6 +51,7 @@ BEGIN
     begin 
         if rising_edge(clk) then
             read_data_s(reg , reg_sample_select_any , reg_list.sample_select_any); 
+            read_data_s(reg , RDAD_clk_period , reg_list.RDAD_clk_period); 
         end if;
     end process;
 
@@ -71,7 +73,7 @@ BEGIN
             rx_data := (OTHERS => '0');
 
         ELSIF rising_edge(clk) THEN
-            pull (rx, rx_m2s);
+            pull(rx, rx_m2s);
             pull(tx, tx_s2m);
             sample_select_m2s.RDAD_DIR <= '0';
             sample_select_m2s.RDAD_clk <= '0';
@@ -90,39 +92,59 @@ BEGIN
                     END IF;
 
                 WHEN WDO_LOW_SET0 =>
-                    rdad_stm <= WDO_LOW_SET1;
-                    RDAD_clk_counter <= ( others => '0');
-                    sample_select_m2s.RDAD_SIN <= rx_data(8 - BitCnt); --MSB First
-                    sample_select_m2s.RDAD_DIR <= '1';
-                WHEN WDO_LOW_SET1 =>
-                    if RDAD_clk_counter >= unsigned( RDAD_clk_period) then 
-                        rdad_stm <= WDO_HIGH_SET1;
-                        RDAD_clk_counter <= ( others => '0');
-                    end if;
-                        --sample_select_m2s.RDAD_clk <= '1';
-                    sample_select_m2s.RDAD_DIR <= '1';
-
-                WHEN WDO_HIGH_SET1 =>
-                    sample_select_m2s.RDAD_DIR <= '1';
-                    sample_select_m2s.RDAD_clk <= '1';
-                    --rdad_stm <= WDO_HIGH_SET0;
+                    
                     if RDAD_clk_counter >= unsigned( RDAD_clk_period) then 
                         rdad_stm <= WDO_HIGH_SET0;
                         RDAD_clk_counter <= ( others => '0');
-                end if;
+                    end if;
+                    --rdad_stm <= WDO_LOW_SET1;
+                    --RDAD_clk_counter <= ( others => '0');
+                    sample_select_m2s.RDAD_SIN <= rx_data(8 - BitCnt); --MSB First
+                    sample_select_m2s.RDAD_DIR <= '1';
+                
+                    -- WHEN WDO_LOW_SET1 =>
+                --     -- if RDAD_clk_counter >= unsigned( RDAD_clk_period) then 
+                --     --     rdad_stm <= WDO_HIGH_SET1;
+                --     --     RDAD_clk_counter <= ( others => '0');
+                --     -- end if;
+                --     sample_select_m2s.RDAD_clk <= '1';
+                --     sample_select_m2s.RDAD_DIR <= '1';
+                --     rdad_stm <= WDO_HIGH_SET1;
+
+                -- WHEN WDO_HIGH_SET1 =>
+                --     sample_select_m2s.RDAD_DIR <= '1';
+                --     sample_select_m2s.RDAD_clk <= '0';
+                --     rdad_stm <= WDO_HIGH_SET0;
+                --     if RDAD_clk_counter >= unsigned( RDAD_clk_period) then 
+                --         rdad_stm <= WDO_HIGH_SET0;
+                --         RDAD_clk_counter <= ( others => '0');
+                --     end if;
                 WHEN WDO_HIGH_SET0 =>
 
-                    
                     sample_select_m2s.RDAD_DIR <= '1';
-                    BitCnt <= BitCnt + 1;
-                    rdad_stm <= WDO_LOW_SET0;
+                    sample_select_m2s.RDAD_clk <= '1';
+                    if RDAD_clk_counter >= unsigned( RDAD_clk_period) then 
+                            rdad_stm <= WDO_LOW_SET0;
+                            RDAD_clk_counter <= ( others => '0');
+                            BitCnt <= BitCnt + 1;
+                            
+                            IF BitCnt >= 8 THEN
+                                BitCnt <= 0;
+                            --sample_select_m2s.RDAD_DIR <= '0';
+                                rdad_stm <= WDO_VALID;
+                        END IF;
+                    end if;
                     
-                    IF BitCnt >= 8 THEN
-                        BitCnt <= 0;
-                        sample_select_m2s.RDAD_DIR <= '0';
-                        rdad_stm <= WDO_VALID;
-                    END IF;
+                    --BitCnt <= BitCnt + 1;
+                    --rdad_stm <= WDO_LOW_SET0;
+                    
+                    -- IF BitCnt >= 8 THEN
+                    --     BitCnt <= 0;
+                    --     --sample_select_m2s.RDAD_DIR <= '0';
+                    --     rdad_stm <= WDO_VALID;
+                    -- END IF;
                 WHEN WDO_VALID =>
+                    sample_select_m2s.RDAD_DIR <= '0';
                     if ready_to_send(tx) then 
                         send_data(tx, rx_data);
                         rdad_stm <= IDLE;
@@ -136,15 +158,5 @@ BEGIN
             push(rx, rx_s2m);
         END IF;
     END PROCESS;
-
-    PROCESS (clk) is
-        BEGIN
-            if rising_edge(clk) then
-
-                
-                read_data_s(reg , RDAD_clk_period , reg_list.RDAD_clk_period); 
-
-            end if;
-        end process;
     
 END ARCHITECTURE;
