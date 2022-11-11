@@ -45,6 +45,9 @@ architecture arch of roundbuffer_simple is
     signal i_trigger_in   : std_logic;
     signal i_sw_trigger_in   : std_logic;
 
+    --signal edge_t : std_logic_vector(1 downto 0) := "00";
+    --signal sw_trig_update : std_logic := '0';
+
     procedure increment_counter (signal  window_counter_in : inout unsigned  ; signal sampling_t_in : inout sampling_t; signal  sst_counter_in : inout   unsigned ; sst_period_in : std_logic_vector ) is 
 
     begin 
@@ -59,8 +62,24 @@ architecture arch of roundbuffer_simple is
     end procedure;
 begin
 
+    -- -- edge detector for SW_trigger
+
+    -- process (clk)
+    -- begin
+    --     if rising_edge(clk) then
+    --         edge_t(1) <= edge_t(0);
+    --         edge_t(0) <= i_sw_trigger_in;
+            
+    --     end if;
+    -- end process;
+
+    -- sw_trig_update <= '1' when edge_t = "01" else
+    --                     '0';
+
+    --i_trigger_in <= sw_trig_update or trigger_in;
     i_trigger_in <= i_sw_trigger_in or trigger_in;
     sampling_out <= i_sampling_out;
+    
     process( clk,rst )
 
         VARIABLE tx_data : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
@@ -144,8 +163,10 @@ begin
             read_data_s(reg , sst_period , reg_list.sst_period); 
             read_data_s(reg , sample_after_threshold , reg_list.sample_after_threshold); 
             if is_register(reg, reg_list.SW_trigger) then 
-                i_sw_trigger_in <= reg.new_value;
-            end if;
+                 i_sw_trigger_in <= reg.new_value;
+             end if;
+            --read_data_s(reg , i_sw_trigger_in , reg_list.SW_trigger);
+
             
         end if;
     end process;

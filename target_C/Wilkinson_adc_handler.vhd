@@ -29,10 +29,9 @@ ENTITY Wilkinson_adc_handler IS
 END ENTITY;
 ARCHITECTURE arch OF Wilkinson_adc_handler IS
     
-    SIGNAL i_will_clock : STD_LOGIC := '0';
+    --SIGNAL i_will_clock : STD_LOGIC := '0';
 
     signal DISCH_PERIOD : STD_LOGIC_VECTOR(15 DOWNTO 0);
-    SIGNAL WL_CNT_EN : STD_LOGIC := '0';
 
     --State
     TYPE wilkinson_type IS (
@@ -47,6 +46,10 @@ ARCHITECTURE arch OF Wilkinson_adc_handler IS
     
 --    SIGNAL will_period : std_logic_vector(15 downto 0) := x"0000";
 --    SIGNAL will_period_counter : UNSIGNED(15 downto 0) := x"0000";
+
+    attribute fsm_encoding : string;
+    attribute fsm_encoding of wlstate : signal is "sequential"; 
+
 BEGIN
 
     -- Wilkinson
@@ -61,7 +64,7 @@ BEGIN
             will_out.GCC_reset   <= '1';
         --    i_will_clock<= '1'; 
             rx := axisStream_32_slave_null;
-            WL_CNT_EN <= '0';
+            WL_CNT_INTL <= (others => '0');
             wlstate <= IDLE;
             tx := axisStream_32_master_null;
             rx_data := (OTHERS => '0');
@@ -92,7 +95,7 @@ BEGIN
                 WHEN START =>
                     will_out.GCC_reset <= '0';
                     will_out.ramp <= '1';
-                    IF (WL_CNT_INTL = unsigned(ramp_count_max) ) THEN --x"7ff"
+                    IF (WL_CNT_INTL =  unsigned(ramp_count_max)) THEN --  x"07FF"
                         wlstate <= SAMPLE_END;
                         will_out.ramp <= '0';
                     END IF;
@@ -107,7 +110,7 @@ BEGIN
 
                 WHEN RAMP_DISCH =>
                     will_out.GCC_reset <= '0';
-                    IF WL_CNT_INTL > UNSIGNED(DISCH_PERIOD) THEN
+                    IF WL_CNT_INTL > UNSIGNED(DISCH_PERIOD) THEN  
                         wlstate <= IDLE;
                     END IF;
 

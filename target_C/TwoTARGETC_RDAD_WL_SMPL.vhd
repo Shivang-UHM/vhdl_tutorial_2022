@@ -96,8 +96,6 @@ BEGIN
           rx_s2m=>     u_wlk_tx_s2m,
           tx_m2s=>     data_out_m2s,
           tx_s2m=>     data_out_s2m
-
-
     ) ;
 
 

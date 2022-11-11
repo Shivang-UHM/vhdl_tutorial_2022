@@ -29,12 +29,6 @@ END ENTITY;
 ARCHITECTURE arch OF data_shift_out IS
 
     signal data_out : slv_12_array(0 TO 31);
-
-    
-    
-
-
-    
     --State
     TYPE state_type IS (
         IDLE,
@@ -53,10 +47,12 @@ ARCHITECTURE arch OF data_shift_out IS
     SIGNAL word_out_cnt  : INTEGER := 0;
     SIGNAL SSBitCnt : INTEGER := 0;
 
-
-    
     constant c_ignore_start : INTEGER := 2;
     constant c_magic_wait_time_for_increment : INTEGER := 10; -- your bet is as good as mine
+    
+    attribute fsm_encoding : string;
+    attribute fsm_encoding of hsout_stm : signal is "sequential"; 
+   
 
 BEGIN
 

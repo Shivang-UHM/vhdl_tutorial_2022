@@ -37,16 +37,30 @@ signal RDAD_clk_counter : unsigned(15 downto 0) := ( others => '0');
 TYPE rdad_state_type IS (
     IDLE,  
     WDO_LOW_SET0, 
-    WDO_LOW_SET1, 
-    WDO_HIGH_SET1, 
+    --WDO_LOW_SET1, 
+    --WDO_HIGH_SET1, 
     WDO_HIGH_SET0,
     WDO_VALID
 );
 SIGNAL rdad_stm : rdad_state_type := IDLE;
-
-
+signal rdad_num  : std_logic_vector(1 downto 0);
 signal reg_sample_select_any : std_logic;
+
+attribute fsm_encoding : string;
+attribute fsm_encoding of rdad_stm : signal is "sequential"; 
+
+attribute mark_debug : string;
+attribute mark_debug of BitCnt: signal is "true";
+attribute mark_debug of rdad_num: signal is "true";
+
 BEGIN
+
+    rdad_num <= "00" when rdad_stm = IDLE else
+                "01" when rdad_stm = WDO_LOW_SET0 else
+                "10" when rdad_stm = WDO_HIGH_SET0 else
+                "11" when rdad_stm = WDO_VALID;
+
+                
     PROCESS (rst, clk) is 
     begin 
         if rising_edge(clk) then

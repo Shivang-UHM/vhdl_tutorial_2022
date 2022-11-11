@@ -122,9 +122,6 @@ entity target_C_top is
     B_SAMPLESEL_ANY : out std_logic ;
     B_DONE:			in	std_logic
     
-    
-    
-    
     );
 end target_C_top;
 
@@ -132,18 +129,9 @@ architecture Behavioral of target_C_top is
     signal gp_in_0_0 : STD_LOGIC_VECTOR ( 31 downto 0 ) := (others =>'0');
     signal gp_out_0_0 : STD_LOGIC_VECTOR ( 31 downto 0 ):= (others =>'0');
     
-    
     signal gp_in_1_0 : STD_LOGIC_VECTOR ( 31 downto 0 ):= (others =>'0');
     signal gp_out_1_0 : STD_LOGIC_VECTOR ( 31 downto 0 ):= (others =>'0');
     
-    
-        
-
-    
-    
-
-    
-
     signal FCLK_CLK0 : STD_LOGIC;
     signal peripheral_aresetn : STD_LOGIC_VECTOR ( 0 to 0 );
     signal m00_axi_m2s_0 : STD_LOGIC_VECTOR ( 104 downto 0 );
@@ -151,7 +139,7 @@ architecture Behavioral of target_C_top is
     signal rx_m2s :  AXI4LITE_m2s;
     signal rx_s2m :  AXI4LITE_s2m;
 
-    signal    clk : std_logic;
+    signal clk : std_logic;
     signal rst : std_logic;
     signal reg : registerT;
     signal trigger_in   : std_logic;
@@ -173,12 +161,21 @@ architecture Behavioral of target_C_top is
     signal LC_s2m : Legacy_serial_s2m;
     
     -- debug signals
-    signal wlclk : std_logic;
-    attribute mark_debug : string;
---    attribute mark_debug of wlclk: signal is "true";
+   -- signal wlclk : std_logic;
+    -- signal done_dbg : std_logic_vector(1 downto 0);
+    -- signal test : std_logic_vector(1 downto 0);
+    
+    -- attribute mark_debug : string;
+    -- attribute dont_touch : string;
+    -- attribute mark_debug of done_dbg: signal is "true";
+    -- attribute dont_touch of done_dbg: signal is "true";
+    -- attribute dont_touch of A_DONE: signal is "true";
+    -- attribute dont_touch of B_DONE: signal is "true";
     
 begin
 
+
+    --done_dbg <= A_DONE & B_DONE;
 
 u_zynq : entity work.design_1_wrapper port map (
 
@@ -252,7 +249,7 @@ U_readout: entity work.readout_simple_complete port map(
     sample_select_m2s =>   sample_select_m2s ,
     
     addr  =>  addr  ,
-    data  =>   data  
+    data  =>   data
   ) ;
 
 
